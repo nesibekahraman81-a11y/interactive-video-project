@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>İnteraktif Video Sunumu</title>
+
+<style>
+  body{
+    margin:0;
+    background:#5a0f1a; 
+    min-height:100vh;
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    font-family:Arial, sans-serif;
+  }
+
+  #startBtn{
+    padding:18px 40px;
+    font-size:20px;
+    margin-bottom:16px;
+    cursor:pointer;
+    border:none;
+    border-radius:12px;
+    background:#fff;
+    color:#5a0f1a;
+    font-weight:bold;
+  }
+
+  #infoText{
+    max-width:420px;
+    text-align:center;
+    background:rgba(0,0,0,0.4);
+    padding:14px 16px;
+    border-radius:12px;
+    font-size:14px;
+    line-height:1.5;
+    margin-bottom:24px;
+  }
+
+  #wrap{
+    position:relative;
+    width:90%;
+    max-width:420px; 
+  }
+
+  video{
+    width:100%;
+    height:auto;
+    border-radius:16px;
+    transition:opacity .5s ease;
+    background:black;
+    display:block;
+  }
+
+  #videoB{
+    position:absolute;
+    top:0;
+    left:0;
+    opacity:0;
+  }
+
+  p{
+    margin-top:16px;
+    font-size:13px;
+    opacity:.8;
+  }
+</style>
+</head>
+
+<body>
+
+<button id="startBtn">Başlat</button>
+
+<div id="infoText">
+  İnteraktif video sunumuna hoşgeldin.<br>
+  Komuta sende.<br>
+  A ve B tuşlarını kullanarak videolar arası geçiş yap.
+</div>
+
+<div id="wrap">
+  <video id="videoA" src="videoA.mp4"></video>
+  <video id="videoB" src="videoB.mp4"></video>
+</div>
+
+<p>A ve B tuşlarını kullan</p>
+
+<script>
+const A = document.getElementById("videoA");
+const B = document.getElementById("videoB");
+const startBtn = document.getElementById("startBtn");
+
+let running = false;
+
+startBtn.onclick = ()=>{
+  A.play();
+  B.play();
+  A.muted = false;
+  B.muted = true;
+  running = true;
+  startBtn.style.display = "none";
+  document.getElementById("infoText").style.display = "none";
+}
+
+function switchCam(cam){
+  if(!running) return;
+
+  const t = A.currentTime;
+  A.currentTime = t;
+  B.currentTime = t;
+
+  if(cam === "A"){
+    A.style.opacity = 1;
+    B.style.opacity = 0;
+    A.muted = false;
+    B.muted = true;
+  }else{
+    A.style.opacity = 0;
+    B.style.opacity = 1;
+    A.muted = true;
+    B.muted = false;
+  }
+}
+
+document.addEventListener("keydown",(e)=>{
+  if(e.key === "a" || e.key === "A") switchCam("A");
+  if(e.key === "b" || e.key === "B") switchCam("B");
+});
+</script>
+
+</body>
+</html>
